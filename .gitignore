@@ -1,0 +1,30 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# Build output
+/dist
+/reports
+/storybook-static
+
+# editor config
+.idea/
+.vscode/
+
+# files managed OS.
+.DS_Store
+Thumbs.db
+/.env
+.vercel

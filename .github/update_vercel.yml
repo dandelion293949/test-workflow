@@ -1,0 +1,41 @@
+name: Update vercel.json (Daily)
+
+on:
+  # 日本時間で毎日8:00に実行 (UTCでは 23:00)
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-vercel-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run update-vercel script
+        run: yarn update-vercel
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: 'update-vercel-redirects-${{ github.run_number }}'
+          title: 'chore: update vercel.json (auto-generated)'
+          body: |
+            This pull request was created automatically by a scheduled workflow.
+            - Date (JST): ${{ steps.update-vercel-script.outputs.DATE || '' }}
+          commit-message: 'chore: update vercel.json based on daily schedule'
+          base: 'staging'
+          path: 'vercel.json'
+          delete-branch: true

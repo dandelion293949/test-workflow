@@ -1,0 +1,96 @@
+{
+  "rewrites": [
+    { "source": "/invoice", "destination": "/general1/invoice" },
+    { "source": "/invoice/", "destination": "/general1/invoice" },
+    { "source": "/guide", "destination": "/general1/guide" },
+    { "source": "/guide/", "destination": "/general1/guide" },
+    { "source": "/privacy", "destination": "/general1/privacy" },
+    { "source": "/privacy/", "destination": "/general1/privacy" },
+    { "source": "/creditcard", "destination": "/general1/creditcard" },
+    { "source": "/creditcard/", "destination": "/general1/creditcard" },
+    { "source": "/(.*)", "destination": "/404.html" }
+  ],
+  "redirects": [
+    {
+      "source": "/general1(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "entry.tmnf1.form.tmnf.joinsure.jp"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/general1(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "tmnf1.joinsure.jp"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/general1(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "tmnf-mp-git-staging-justincase.vercel.app"
+        }
+      ],
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/(blue-i|blue-i/|blue-i-10070007)",
+      "destination": "/blue-i-10070007-202407/",
+      "permanent": false
+    },
+    {
+      "source": "/blue-i-10070007/(contact|contact/)",
+      "destination": "/blue-i-10070007-202407/contact/",
+      "permanent": false
+    },
+    {
+      "source": "/blue-i-10070007/(.*)",
+      "destination": "/blue-i-10070007-202407/",
+      "permanent": false
+    },
+    {
+      "source": "/template(.*)",
+      "destination": "/", 
+      "permanent": false 
+    }
+  ],
+  "headers": [
+    {
+      "source": "(.*)\\.(zip|pptx)",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": "attachment"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/octet-stream"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/force-download"
+        }
+      ]
+    },
+    {
+      "source": "(.*)\\.pdf",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/pdf"
+        }
+      ]
+    }
+  ]
+}
