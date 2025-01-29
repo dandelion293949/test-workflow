@@ -44,8 +44,8 @@ jobs:
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          token: ${{ secrets.GH_ADMIN_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Add label
         run: gh pr edit ${{ steps.cpr.outputs.pull-request-number }} --add-label automated-pr
         env:
-          GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
