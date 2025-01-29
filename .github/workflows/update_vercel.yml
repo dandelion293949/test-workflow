@@ -31,14 +31,21 @@ jobs:
         run: yarn update_vercel
 
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: 'update-vercel-redirects-${{ github.run_number }}'
           title: 'chore: update vercel.json (auto-generated)'
-          body: |
-            This pull request was created automatically by a scheduled workflow.
-            - Date (JST): ${{ steps.update-vercel-script.outputs.DATE || '' }}
           commit-message: 'chore: update vercel.json based on daily schedule'
           base: 'staging'
           delete-branch: true
+      - name: Enable auto-merge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          token: ${{ secrets.GH_ADMIN_TOKEN }}
+      - name: Add label
+        run: gh pr edit ${{ steps.cpr.outputs.pull-request-number }} --add-label automated-pr
+        env:
+          GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
