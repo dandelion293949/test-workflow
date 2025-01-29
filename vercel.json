@@ -1,14 +1,41 @@
 {
   "rewrites": [
-    { "source": "/invoice", "destination": "/general1/invoice" },
-    { "source": "/invoice/", "destination": "/general1/invoice" },
-    { "source": "/guide", "destination": "/general1/guide" },
-    { "source": "/guide/", "destination": "/general1/guide" },
-    { "source": "/privacy", "destination": "/general1/privacy" },
-    { "source": "/privacy/", "destination": "/general1/privacy" },
-    { "source": "/creditcard", "destination": "/general1/creditcard" },
-    { "source": "/creditcard/", "destination": "/general1/creditcard" },
-    { "source": "/(.*)", "destination": "/404.html" }
+    {
+      "source": "/invoice",
+      "destination": "/general1/invoice"
+    },
+    {
+      "source": "/invoice/",
+      "destination": "/general1/invoice"
+    },
+    {
+      "source": "/guide",
+      "destination": "/general1/guide"
+    },
+    {
+      "source": "/guide/",
+      "destination": "/general1/guide"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/general1/privacy"
+    },
+    {
+      "source": "/privacy/",
+      "destination": "/general1/privacy"
+    },
+    {
+      "source": "/creditcard",
+      "destination": "/general1/creditcard"
+    },
+    {
+      "source": "/creditcard/",
+      "destination": "/general1/creditcard"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/404.html"
+    }
   ],
   "redirects": [
     {
@@ -61,8 +88,30 @@
     },
     {
       "source": "/template(.*)",
-      "destination": "/", 
-      "permanent": false 
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/old-page-a",
+      "has": [
+        {
+          "type": "host",
+          "value": "https://entry.tmnf1.form.tmnf-stg.joinsure.jp"
+        }
+      ],
+      "destination": "/new-page-a",
+      "permanent": false
+    },
+    {
+      "source": "/old-page-b",
+      "has": [
+        {
+          "type": "host",
+          "value": "https://entry.tmnf1.form.tmnf.joinsure.jp"
+        }
+      ],
+      "destination": "/new-page-b",
+      "permanent": false
     }
   ],
   "headers": [
