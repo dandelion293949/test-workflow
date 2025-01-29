@@ -37,5 +37,4 @@ jobs:
             - Date (JST): ${{ steps.update-vercel-script.outputs.DATE || '' }}
           commit-message: 'chore: update vercel.json based on daily schedule'
           base: 'staging'
-          path: 'vercel.json'
           delete-branch: true
