@@ -49,11 +49,13 @@ jobs:
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure git
+        if: steps.cpr.outputs.pull-request-number != ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
   
       - name: Merge staging into main branch
+        if: steps.cpr.outputs.pull-request-number != ''
         run: |
           # ターゲットブランチ(開発ブランチ)をチェックアウト
           git checkout main
@@ -62,6 +64,8 @@ jobs:
           git merge --no-commit staging || true
   
       - name: Create Pull Request
+        id: sync-staging-into-main
+        if: steps.cpr.outputs.pull-request-number != ''
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -70,3 +74,9 @@ jobs:
           title: "Sync staging into main"
           base: "main"
           path: "."
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ steps.sync-staging-into-main.outputs.pull-request-number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
