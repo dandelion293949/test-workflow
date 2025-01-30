@@ -46,3 +46,25 @@ jobs:
         with:
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+  
+      - name: Merge stagin into main branch
+        run: |
+          # ターゲットブランチ(開発ブランチ)をチェックアウト
+          git checkout main
+          git pull origin main
+          # main の変更をマージ
+          git merge --no-commit staging || true
+  
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: sync-stating-into-main
+          commit-message: "chore: sync staging into main"
+          title: "Sync staging into main"
+          base: "main"
+          path: "."
