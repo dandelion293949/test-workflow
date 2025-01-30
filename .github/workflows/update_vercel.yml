@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v3
@@ -51,12 +53,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
   
-      - name: Merge stagin into main branch
+      - name: Merge staging into main branch
         run: |
           # ターゲットブランチ(開発ブランチ)をチェックアウト
           git checkout main
           git pull origin main
-          # main の変更をマージ
+          # staging の変更をマージ
           git merge --no-commit staging || true
   
       - name: Create Pull Request
