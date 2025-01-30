@@ -57,6 +57,7 @@ jobs:
       - name: Merge staging into main branch
         if: steps.cpr.outputs.pull-request-number != ''
         run: |
+          git pull origin staging
           # ターゲットブランチ(開発ブランチ)をチェックアウト
           git checkout main
           git pull origin main
