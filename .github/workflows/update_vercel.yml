@@ -77,5 +77,5 @@ jobs:
       - name: Enable auto-merge on main PR
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          pull-request-number: ${{ steps.pr-to-staging.outputs.pull-request-number }}+1
+          pull-request-number: ${{ steps.sync-staging-into-main.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
