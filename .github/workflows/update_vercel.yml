@@ -75,7 +75,6 @@ jobs:
           GIT_PR_RELEASE_BRANCH_PRODUCTION: main
           GIT_PR_RELEASE_TITLE: 'chore: sync staging into main'
       - name: Enable auto-merge on main PR
-        if: steps.sync-staging-into-main.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.pr-to-staging.outputs.pull-request-number }}+1
