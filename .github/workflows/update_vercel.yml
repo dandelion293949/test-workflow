@@ -62,19 +62,22 @@ jobs:
           # 最新の staging を取得して main にマージ
           git checkout main
           git pull origin main
-          git merge origin/staging || true
-          # ↑ 競合がある場合は失敗ではなく続行 (|| true)
-          # 競合発生時には後続の PR 作成時に差分として扱われる
+          git merge origin/staging
 
       - name: Create Pull Request (staging -> main)
         id: sync-staging-into-main
-        uses: bakunyo/git-pr-release-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_PR_RELEASE_BRANCH_STAGING: staging
-          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
-          GIT_PR_RELEASE_TITLE: 'chore: sync staging into main'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: sync-staging-into-main
+          author: GitHub Action <action@github.com>
+          committer: GitHub Action <action@github.com>
+          commit-message: 'chore: sync staging into main'
+          title: 'Sync staging into main'
+          base: 'main'
+
       - name: Enable auto-merge on main PR
+        if: steps.sync-staging-into-main.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.sync-staging-into-main.outputs.pull-request-number }}
