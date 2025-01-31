@@ -52,6 +52,20 @@ jobs:
           pull-request-number: ${{ steps.pr-to-staging.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge staging changes into main locally
+        run: |
+          # 最新の staging を取得して main にマージ
+          git checkout main
+          git pull origin main
+          git merge origin/staging || true
+          # ↑ 競合がある場合は失敗ではなく続行 (|| true)
+          # 競合発生時には後続の PR 作成時に差分として扱われる
+
       - name: Create Pull Request (staging -> main)
         id: sync-staging-into-main
         uses: peter-evans/create-pull-request@v5
