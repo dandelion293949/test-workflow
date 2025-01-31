@@ -38,6 +38,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: 'update-vercel-redirects-${{ github.run_number }}'
+          author: GitHub Action <action@github.com>
+          committer: GitHub Action <action@github.com>
           title: 'chore: update vercel.json (auto-generated)'
           commit-message: 'chore: update vercel.json based on daily schedule'
           base: 'staging'
@@ -71,6 +73,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: sync-stating-into-main
+          author: GitHub Action <action@github.com>
+          committer: GitHub Action <action@github.com>
           commit-message: "chore: sync staging into main"
           title: "Sync staging into main"
           base: "main"
