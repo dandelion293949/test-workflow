@@ -68,20 +68,15 @@ jobs:
 
       - name: Create Pull Request (staging -> main)
         id: sync-staging-into-main
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: sync-staging-into-main
-          author: GitHub Action <action@github.com>
-          committer: GitHub Action <action@github.com>
-          commit-message: 'chore: sync staging into main'
-          title: 'Sync staging into main'
-          base: 'main'
-          path: '.'
-
+        uses: bakunyo/git-pr-release-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_PR_RELEASE_BRANCH_STAGING: staging
+          GIT_PR_RELEASE_BRANCH_PRODUCTION: main
+          GIT_PR_RELEASE_TITLE: 'chore: sync staging into main'
       - name: Enable auto-merge on main PR
         if: steps.sync-staging-into-main.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          pull-request-number: ${{ steps.sync-staging-into-main.outputs.pull-request-number }}
+          pull-request-number: ${{ steps.pr-to-staging.outputs.pull-request-number }}+1
           token: ${{ secrets.GITHUB_TOKEN }}
