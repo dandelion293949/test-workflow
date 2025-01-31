@@ -1,7 +1,7 @@
 name: Update vercel.json (Daily)
 
 on:
-  # 日本時間で毎日8:00に実行 (UTCでは 23:00)
+  # 日本時間で毎日 8:00 に実行 (UTCでは 23:00)
   schedule:
     - cron: '0 23 * * *'
   workflow_dispatch:
@@ -11,11 +11,11 @@ permissions:
   pull-requests: write
 
 jobs:
-  update-vercel-job:
+  update-vercel-and-sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
+      - name: Check out repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -32,8 +32,8 @@ jobs:
       - name: Run update-vercel script
         run: yarn update_vercel
 
-      - name: Create Pull Request
-        id: cpr
+      - name: Create Pull Request to staging
+        id: pr-to-staging
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -44,43 +44,47 @@ jobs:
           commit-message: 'chore: update vercel.json based on daily schedule'
           base: 'staging'
           delete-branch: true
-      - name: Enable auto-merge
-        if: steps.cpr.outputs.pull-request-number != ''
+
+      - name: Enable auto-merge on staging PR
+        if: steps.pr-to-staging.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          pull-request-number: ${{ steps.pr-to-staging.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Configure git
-        if: steps.cpr.outputs.pull-request-number != ''
+        if: steps.pr-to-staging.outputs.pull-request-number != ''
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-  
-      - name: Merge staging into main branch
-        if: steps.cpr.outputs.pull-request-number != ''
+
+      - name: Merge staging changes into main locally
+        if: steps.pr-to-staging.outputs.pull-request-number != ''
         run: |
+          # 最新の staging を取得して main にマージ
           git pull origin staging
-          # ターゲットブランチ(開発ブランチ)をチェックアウト
           git checkout main
           git pull origin main
-          # staging の変更をマージ
           git merge --no-commit staging || true
-  
-      - name: Create Pull Request
+          # ↑ 競合がある場合は失敗ではなく続行 (|| true)
+          # 競合発生時には後続の PR 作成時に差分として扱われる
+
+      - name: Create Pull Request (staging -> main)
         id: sync-staging-into-main
-        if: steps.cpr.outputs.pull-request-number != ''
+        if: steps.pr-to-staging.outputs.pull-request-number != ''
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: sync-stating-into-main
+          branch: sync-staging-into-main
           author: GitHub Action <action@github.com>
           committer: GitHub Action <action@github.com>
-          commit-message: "chore: sync staging into main"
-          title: "Sync staging into main"
-          base: "main"
-          path: "."
-      - name: Enable auto-merge
-        if: steps.cpr.outputs.pull-request-number != ''
+          commit-message: 'chore: sync staging into main'
+          title: 'Sync staging into main'
+          base: 'main'
+          path: '.'
+
+      - name: Enable auto-merge on main PR
+        if: steps.sync-staging-into-main.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.sync-staging-into-main.outputs.pull-request-number }}
