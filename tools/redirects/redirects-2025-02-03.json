@@ -1,0 +1,12 @@
+[
+    {
+        "source": "/old-page-a",
+        "destination": "/new-page-a",
+        "env": "STG"
+    },
+    {
+      "source": "/old-page-b",
+      "destination": "/new-page-b",
+      "env": "PROD"
+    }
+]
