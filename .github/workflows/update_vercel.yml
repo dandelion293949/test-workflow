@@ -69,6 +69,7 @@ jobs:
           # 最新の staging を取得して main にマージ
           git checkout main
           git pull origin main
+          git fetch origin staging
           git merge origin/staging
 
       - name: Create Pull Request (staging -> main)
