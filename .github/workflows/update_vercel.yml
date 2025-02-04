@@ -51,7 +51,10 @@ jobs:
         with:
           pull-request-number: ${{ steps.pr-to-staging.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Add label
+        run: gh pr edit ${{ steps.pr-to-staging.outputs.pull-request-number }} --add-label automated-pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
@@ -82,3 +85,7 @@ jobs:
         with:
           pull-request-number: ${{ steps.sync-staging-into-main.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Add label
+        run: gh pr edit ${{ steps.sync-staging-into-main.outputs.pull-request-number }} --add-label automated-pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
