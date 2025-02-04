@@ -88,4 +88,4 @@ jobs:
       - name: Add label
         run: gh pr edit ${{ steps.sync-staging-into-main.outputs.pull-request-number }} --add-label automated-pr
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
