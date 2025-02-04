@@ -56,6 +56,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
 
+      # staging のPRがApprove、マージされるまで待つ
+      - name: Sleep for 5 seconds
+        run: sleep 5
+
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
