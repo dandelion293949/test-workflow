@@ -56,9 +56,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
 
-      - name: Sleep for 10 seconds
-        run: sleep 10
-
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
