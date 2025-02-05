@@ -57,8 +57,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
 
       # staging のPRがApprove、マージされるまで待つ
-      - name: Sleep for 10 seconds
-        run: sleep 10
+      - name: Sleep for 30 seconds
+        run: sleep 30
 
       - name: Configure git
         run: |
