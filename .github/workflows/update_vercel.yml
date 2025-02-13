@@ -56,18 +56,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
 
-      - name: Configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      # - name: Configure git
+      #   run: |
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Merge staging changes into main locally
-        run: |
-          git checkout main
-          git pull origin main
+      # - name: Merge staging changes into main locally
+      #   run: |
+      #     git checkout main
+      #     git pull origin main
 
-      - name: Run update-vercel script
-        run: yarn update_vercel
+      # - name: Run update-vercel script
+      #   run: yarn update_vercel
 
       - name: Create Pull Request to main
         id: pr-to-main
