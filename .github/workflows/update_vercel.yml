@@ -52,22 +52,23 @@ jobs:
           pull-request-number: ${{ steps.pr-to-staging.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Add label
+        if: steps.pr-to-staging.outputs.pull-request-operation == 'created'
         run: gh pr edit ${{ steps.pr-to-staging.outputs.pull-request-number }} --add-label automated-pr
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
 
-      # - name: Configure git
-      #   run: |
-      #     git config user.name "github-actions[bot]"
-      #     git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # - name: Merge staging changes into main locally
-      #   run: |
-      #     git checkout main
-      #     git pull origin main
+      - name: Switch to main branch
+        run: |
+          git checkout main
+          git pull origin main
 
-      # - name: Run update-vercel script
-      #   run: yarn update_vercel
+      - name: Run update-vercel script
+        run: yarn update_vercel
 
       - name: Create Pull Request to main
         id: pr-to-main
@@ -88,6 +89,7 @@ jobs:
           pull-request-number: ${{ steps.pr-to-main.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Add label
+        if: steps.pr-to-main.outputs.pull-request-operation == 'created'
         run: gh pr edit ${{ steps.pr-to-main.outputs.pull-request-number }} --add-label automated-pr
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
