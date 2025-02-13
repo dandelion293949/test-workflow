@@ -1014,6 +1014,28 @@
       ],
       "destination": "/new-page-2",
       "permanent": false
+    },
+    {
+      "source": "/old-page-1",
+      "has": [
+        {
+          "type": "host",
+          "value": "https://entry.tmnf1.form.tmnf-stg.joinsure.jp"
+        }
+      ],
+      "destination": "/new-page-1",
+      "permanent": false
+    },
+    {
+      "source": "/old-page-2",
+      "has": [
+        {
+          "type": "host",
+          "value": "https://entry.tmnf1.form.tmnf.joinsure.jp"
+        }
+      ],
+      "destination": "/new-page-2",
+      "permanent": false
     }
   ],
   "headers": [

@@ -37,7 +37,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: 'update-vercel-redirects-${{ github.run_number }}'
+          branch: 'update-vercel-redirects-to-staging'
           author: GitHub Action <action@github.com>
           committer: GitHub Action <action@github.com>
           title: 'chore: update vercel.json (auto-generated)'
@@ -56,10 +56,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
 
-      # staging のPRがApprove、マージされるまで待つ
-      - name: Sleep for 30 seconds
-        run: sleep 30
-
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
@@ -67,31 +63,31 @@ jobs:
 
       - name: Merge staging changes into main locally
         run: |
-          # 最新の staging を取得して main にマージ
           git checkout main
           git pull origin main
-          git fetch origin staging
-          git merge origin/staging
 
-      - name: Create Pull Request (staging -> main)
-        id: sync-staging-into-main
+      - name: Run update-vercel script
+        run: yarn update_vercel
+
+      - name: Create Pull Request to main
+        id: pr-to-main
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: sync-staging-into-main
+          branch: 'update-vercel-redirects-to-main'
           author: GitHub Action <action@github.com>
           committer: GitHub Action <action@github.com>
-          commit-message: 'chore: sync staging into main'
-          title: 'Sync staging into main'
+          title: 'chore: update vercel.json (auto-generated)'
+          commit-message: 'chore: update vercel.json based on daily schedule'
           base: 'main'
 
       - name: Enable auto-merge on main PR
-        if: steps.sync-staging-into-main.outputs.pull-request-operation == 'created'
+        if: steps.pr-to-main.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          pull-request-number: ${{ steps.sync-staging-into-main.outputs.pull-request-number }}
+          pull-request-number: ${{ steps.pr-to-main.outputs.pull-request-number }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Add label
-        run: gh pr edit ${{ steps.sync-staging-into-main.outputs.pull-request-number }} --add-label automated-pr
+        run: gh pr edit ${{ steps.pr-to-main.outputs.pull-request-number }} --add-label automated-pr
         env:
           GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
